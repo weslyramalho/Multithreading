@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Cep struct {
@@ -79,7 +80,11 @@ func main() {
 
 		case data := <-c2:
 			fmt.Printf("\nVIACEP ", data.Cep, data.Bairro, data.Complemento, data.Logradouro, data.Uf)
+
+		case <-time.After(time.Second * 1):
+			fmt.Println("timeout")
 		}
+
 		//https: //cdn.apicep.com/file/apicep/68537-000.json
 		//	https: //viacep.com.br/ws/68537000/json/
 	}
