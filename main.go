@@ -77,7 +77,7 @@ func main() {
 	for {
 		select {
 		case data := <-c1:
-			fmt.Printf("\nAPICEP ", data.City, data.State)
+			fmt.Printf("\nbrasilapi ", data.City, data.State)
 
 		case data := <-c2:
 			fmt.Printf("\nVIACEP ", data.Cep, data.Bairro, data.Complemento, data.Logradouro, data.Uf)
