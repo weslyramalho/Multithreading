@@ -22,12 +22,12 @@ type Cep struct {
 	Siafi       string `json:"siafi"`
 }
 type Cep2 struct {
-	Status   int    `json:"status"`
-	Code     string `json:"code"`
-	State    string `json:"state"`
-	City     string `json:"city"`
-	District string `json:"district"`
-	Address  string `json:"address"`
+	Cep          string `json:"cep"`
+	State        string `json:"state"`
+	City         string `json:"city"`
+	Neighborhood string `json:"neighborhood"`
+	Street       string `json:"street"`
+	Service      string `json:"service"`
 }
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 
 	go func() {
 		for {
-			req, err := http.Get("https://cdn.apicep.com/file/apicep/06233-030.json")
+			req, err := http.Get("https://brasilapi.com.br/api/cep/v1/06233030")
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Erro ao fazer requisição: %v\n", err)
 			}
@@ -50,6 +50,7 @@ func main() {
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%+v\n", err)
 			}
+			//println(time.After(time.Second))
 			c1 <- data
 		}
 	}()
@@ -76,7 +77,7 @@ func main() {
 	for {
 		select {
 		case data := <-c1:
-			fmt.Printf("\nAPICEP ", data.Address, data.City)
+			fmt.Printf("\nAPICEP ", data.City, data.State)
 
 		case data := <-c2:
 			fmt.Printf("\nVIACEP ", data.Cep, data.Bairro, data.Complemento, data.Logradouro, data.Uf)
