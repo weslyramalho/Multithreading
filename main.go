@@ -35,7 +35,7 @@ func main() {
 	c2 := make(chan Cep)
 
 	go func() {
-		for {
+		for i := 0; i < 1; i++ {
 			req, err := http.Get("https://brasilapi.com.br/api/cep/v1/06233030")
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Erro ao fazer requisição: %v\n", err)
@@ -50,13 +50,14 @@ func main() {
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%+v\n", err)
 			}
-			//println(time.After(time.Second))
 			c1 <- data
+			i++
+
 		}
 	}()
 
 	go func() {
-		for {
+		for i := 0; i < 1; i++ {
 			req, err := http.Get("https://viacep.com.br/ws/06233030/json/")
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Erro ao fazer requisição: %v\n", err)
@@ -72,21 +73,21 @@ func main() {
 				fmt.Fprintf(os.Stderr, "%+v\n", err)
 			}
 			c2 <- data
+			i++
 		}
 	}()
-	for {
+	for i := 0; i < 3; i++ {
 		select {
 		case data := <-c1:
-			fmt.Printf("\nbrasilapi ", data.City, data.State)
+			fmt.Printf("\nbrasilapi ", data.Cep, data.City, data.State, data.Street, data.Neighborhood)
 
 		case data := <-c2:
-			fmt.Printf("\nVIACEP ", data.Cep, data.Bairro, data.Complemento, data.Logradouro, data.Uf)
+			fmt.Printf("\nVIACEP ", data.Cep, data.Localidade, data.Uf, data.Logradouro, data.Bairro)
 
 		case <-time.After(time.Second * 1):
 			fmt.Println("timeout")
 		}
+		i++
 
-		//https: //cdn.apicep.com/file/apicep/68537-000.json
-		//	https: //viacep.com.br/ws/68537000/json/
 	}
 }
