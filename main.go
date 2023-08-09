@@ -76,18 +76,16 @@ func main() {
 			i++
 		}
 	}()
-	for i := 0; i < 3; i++ {
-		select {
-		case data := <-c1:
-			fmt.Printf("\nbrasilapi ", data.Cep, data.City, data.State, data.Street, data.Neighborhood)
 
-		case data := <-c2:
-			fmt.Printf("\nVIACEP ", data.Cep, data.Localidade, data.Uf, data.Logradouro, data.Bairro)
+	select {
+	case data := <-c1:
+		fmt.Printf("\nbrasilapi ", data.Cep, data.City, data.State, data.Street, data.Neighborhood)
 
-		case <-time.After(time.Second * 1):
-			fmt.Println("timeout")
-		}
-		i++
+	case data := <-c2:
+		fmt.Printf("\nVIACEP ", data.Cep, data.Localidade, data.Uf, data.Logradouro, data.Bairro)
 
+	case <-time.After(time.Second * 1):
+		fmt.Println("timeout")
 	}
+
 }
